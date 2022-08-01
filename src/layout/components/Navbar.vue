@@ -1,29 +1,30 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
-    <breadcrumb class="breadcrumb-container" />
-
+    <div class="app-breadcrumb">
+      盛丰物流集团有限公司
+      <span class="breadBtn">体验版</span>
+    </div>
+    <!--     <breadcrumb class="breadcrumb-container" />
+ -->
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
+          <span class="user-name">管理员</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              主页
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
+            <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -33,12 +34,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
+// import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
-    Breadcrumb,
+    /* Breadcrumb,*/
     Hamburger
   },
   computed: {
@@ -64,7 +65,7 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
@@ -74,21 +75,33 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
-
+    color: #fff;
     &:hover {
       background: rgba(0, 0, 0, .025)
     }
   }
 
-  .breadcrumb-container {
+  .app-breadcrumb {
     float: left;
+    line-height: 50px;
+    cursor: text;
+    font-size: 18px;
+    color: #ffffff;
+    .breadBtn {
+      height: 30px;
+      // display: inline-block;
+      padding: 3px 10px;
+      background: #84a9fe;
+      font-size: 14px;
+      border-radius: 10px;
+    }
   }
 
   .right-menu {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    // vertical-align: middle;
     &:focus {
       outline: none;
     }
@@ -113,24 +126,37 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
-
+      // height: 50px;
+      // line-height: 50px;
       .avatar-wrapper {
-        margin-top: 5px;
+        // margin-top: 5px;
         position: relative;
-
+        // line-height: 50px;
+        // height: 50px;
+        // display: flex;
+        // align-items: center;
+        // text-align:center;
+        // vertical-align: middle;
         .user-avatar {
+
+          vertical-align: middle;
           cursor: pointer;
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           border-radius: 10px;
         }
-
+        .user-name {
+          // vertical-align: middle;
+          color: #fff;
+          margin-left: 5px;
+        }
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 20px;
           font-size: 12px;
+          color: #fff;
         }
       }
     }
