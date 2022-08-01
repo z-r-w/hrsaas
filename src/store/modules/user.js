@@ -1,9 +1,10 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 
 // 状态
 const state = {
-  token: getToken() // 设置token初始状态   token持久化 => 放到缓存中
+  token: getToken(), // 设置token初始状态   token持久化 => 放到缓存中
+  userInfo: {} // 存放用户信息
 }
 // 修改状态
 const mutations = {
@@ -16,6 +17,14 @@ const mutations = {
   removeToken(state) {
     state.token = null // 删除vuex的token
     removeToken() // 先清除 vuex  再清除缓存 vuex和 缓存数据的同步
+  },
+  // 获取用户信息
+  setUserInfo(state, result) {
+    state.userInfo = result
+  },
+  // 删除用户信息
+  removeuserInfo(state) {
+    state.userInfo = {}
   }
 }
 // 执行异步
@@ -30,6 +39,12 @@ const actions = {
       // actions 修改state 必须通过mutations
       context.commit('setToken', result)
     }
+  },
+  // 获取用户信息
+  async getUserInfo(context) {
+    const result = await getUserInfo()
+    context.commit('setUserInfo', result)
+    return result
   }
 }
 export default {
