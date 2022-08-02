@@ -76,16 +76,12 @@ router.beforeEach(async function(to, from, next) {
   if (store.getters.token) {
     //   如果有token 继续判断是不是去登录页
     if (to.path === '/login') {
-      console.log('dispatch111111')
       //  表示去的是登录页
       next('/') // 跳到主页
       NProgress.done() // 手动强制关闭一次  为了解决 手动切换地址时  进度条的不关闭的问题
-      console.log('dispatch111111')
     } else {
       if (!store.getters.userId) {
-        console.log('dispatch22222')
         await store.dispatch('user/getUserInfo')
-        console.log('dispatch')
       }
       next() // 直接放行
     }

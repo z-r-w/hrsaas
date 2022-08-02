@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimestampe } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailInfo } from '@/api/user'
 
 // 状态
@@ -38,6 +38,7 @@ const actions = {
       // 现在有用户token
       // actions 修改state 必须通过mutations
       context.commit('setToken', result)
+      setTimestampe()
     }
   },
   // 获取用户信息
@@ -50,6 +51,11 @@ const actions = {
 
     // context.commit('setUserInfo', result)
     // return result
+  },
+  // 退出登录
+  logout(context) {
+    context.commit('removeUserInfo')
+    context.commit('removeToken')
   }
   // 获取用户详细信息
   // async getUserDetailInfo(context) {
