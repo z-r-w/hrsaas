@@ -11,7 +11,9 @@ service.interceptors.request.use(
   config => {
     // 有token值就执行
     if (store.getters.token) {
-      config.Headers.Authorization = `Bearer ${store.getters.token}`
+      config.headers.Authorization = `Bearer ${store.getters.token}`
+      // config.headers['Authorization'] = `Bearer ${store.getters.token}`
+      console.log('token')
     }
     return config
   }, error => { return Promise.reject(error) }

@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, getUserDetailInfo } from '@/api/user'
 
 // 状态
 const state = {
@@ -23,7 +23,7 @@ const mutations = {
     state.userInfo = result
   },
   // 删除用户信息
-  removeuserInfo(state) {
+  removeUserInfo(state) {
     state.userInfo = {}
   }
 }
@@ -43,9 +43,24 @@ const actions = {
   // 获取用户信息
   async getUserInfo(context) {
     const result = await getUserInfo()
-    context.commit('setUserInfo', result)
-    return result
+    const baseInfo = await getUserDetailInfo(result.userId)
+    const baseResult = { ...result, ...baseInfo }
+    context.commit('setUserInfo', baseResult)
+    return baseResult
+
+    // context.commit('setUserInfo', result)
+    // return result
   }
+  // 获取用户详细信息
+  // async getUserDetailInfo(context) {
+  //   console.log('context', context)
+  //   const result = await getUserInfo()
+  //   // const baseInfo = await getUserDetailInfo(state.userInfo.userId)
+  //   const baseInfo = await getUserDetailInfo(result.userId)
+  //   const baseResult = { ...result, ...baseInfo }
+  //   context.commit('setUserInfo', baseResult)
+  //   return baseResult
+  // }
 }
 export default {
   namespaced: true,
