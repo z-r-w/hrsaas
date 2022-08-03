@@ -1,12 +1,12 @@
 import layout from '@/layout' // 引入一级路由
 
 export default {
-  path: '/social   ',
-  name: 'social   ',
-  components: layout,
+  path: '/social',
+  name: 'social',
+  component: layout,
   children: [{
     path: '',
-    components: () => { return import('@/views/social') },
+    component: () => import('@/views/social'),
     meta: {
       title: '社保'
     }
