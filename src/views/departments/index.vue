@@ -15,15 +15,15 @@
 
 <script>
 import TreeTool from './components/tree-tool.vue'
+import { getDepartmentData } from '@/api/department'
+import { tranListToTreeData } from '@/utils'
 export default {
   components: {
     TreeTool
   },
   data() {
     return {
-      departs: [{ name: '总裁办', manager: '曹操', children: [{ name: '董事会', manager: '曹丕' }] },
-        { name: '行政部', manager: '刘备' },
-        { name: '人事部', manager: '孙权' }],
+      departs: [],
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -32,6 +32,18 @@ export default {
         name: '盛丰物流集团有限公司',
         manager: '负责人'
       }
+    }
+  },
+  created() {
+    this.getDepartmentDataFn()
+  },
+  methods: {
+
+    async getDepartmentDataFn() {
+      const { depts } = await getDepartmentData()
+      // 获取树形部门数据
+      this.departs = tranListToTreeData(depts, '')
+      // console.log('depts', this.departs)
     }
   }
 }
