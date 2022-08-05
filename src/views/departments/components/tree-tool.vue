@@ -9,14 +9,14 @@
       <el-row type="flex" justify="end">
         <el-col>{{ treeNode.manager }}</el-col>
         <el-col>
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
               操作<i class="el-icon-arrow-down el-icon--right" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item v-if="isRoot">编辑部门</el-dropdown-item>
-              <el-dropdown-item v-if="isRoot">删除部门</el-dropdown-item></el-dropdown-menu>
+              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <el-dropdown-item v-if="isRoot" command="edit">编辑部门</el-dropdown-item>
+              <el-dropdown-item v-if="isRoot" command="del">删除部门</el-dropdown-item></el-dropdown-menu>
           </el-dropdown>
         </el-col>
       </el-row>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { delDepartmentData } from '@/api/department'
 export default {
   name: '',
   components: {},
@@ -47,7 +48,34 @@ export default {
   watch: {},
   created() {
   },
-  methods: {}
+  methods: {
+    // 点击下拉菜单操作
+    handleCommand(command) {
+      if (command === 'add') {
+        // 添加部门操作
+      } else if (command === 'edit') {
+        // 编辑部门操作
+      } else {
+        // 删除操作
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delDepartmentData(this.treeNode.id)
+          this.$emit('delTreeNode')
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      }
+    } }
 }
 </script>
 

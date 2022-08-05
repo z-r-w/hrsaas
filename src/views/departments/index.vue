@@ -6,7 +6,7 @@
         <TreeTool :tree-node="company" :is-root="false" />
         <!-- 内容 -->
         <el-tree :data="departs" :props="defaultProps">
-          <TreeTool slot-scope="{ data }" :tree-node="data" />
+          <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" />
         </el-tree>
       </el-card>
     </div>
@@ -38,13 +38,13 @@ export default {
     this.getDepartmentDataFn()
   },
   methods: {
-
     async getDepartmentDataFn() {
       const { depts } = await getDepartmentData()
       // 获取树形部门数据
       this.departs = tranListToTreeData(depts, '')
       // console.log('depts', this.departs)
     }
+
   }
 }
 </script>
