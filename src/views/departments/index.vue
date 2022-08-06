@@ -3,23 +3,27 @@
     <div class="app-container">
       <el-card class="tree-card">
         <!-- 头部 -->
-        <TreeTool :tree-node="company" :is-root="false" />
+        <TreeTool :tree-node="company" :is-root="false" @addDapa="addDapaFn" />
         <!-- 内容 -->
         <el-tree :data="departs" :props="defaultProps">
-          <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" />
+          <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" @addDapa="addDapaFn" />
         </el-tree>
+        <!-- 弹窗 -->
+        <addDept :dialog-form-visible="showDialog" />
       </el-card>
     </div>
   </div>
 </template>
 
 <script>
+import addDept from './components/add-dept.vue'
 import TreeTool from './components/tree-tool.vue'
 import { getDepartmentData } from '@/api/department'
 import { tranListToTreeData } from '@/utils'
 export default {
   components: {
-    TreeTool
+    TreeTool,
+    addDept
   },
   data() {
     return {
@@ -31,7 +35,9 @@ export default {
       company: {
         name: '盛丰物流集团有限公司',
         manager: '负责人'
-      }
+      },
+      showDialog: false, // 是否显示弹窗
+      node: null // 获取当前的node节点
     }
   },
   created() {
@@ -43,8 +49,12 @@ export default {
       // 获取树形部门数据
       this.departs = tranListToTreeData(depts, '')
       // console.log('depts', this.departs)
+    },
+    // 添加部门
+    addDapaFn(node) {
+      this.showDialog = true
+      this.node = node
     }
-
   }
 }
 </script>

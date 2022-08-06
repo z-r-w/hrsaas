@@ -53,6 +53,7 @@ export default {
     handleCommand(command) {
       if (command === 'add') {
         // 添加部门操作
+        this.$emit('addDapa', this.treeNode)
       } else if (command === 'edit') {
         // 编辑部门操作
       } else {
