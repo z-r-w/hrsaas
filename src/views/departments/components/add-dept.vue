@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible.sync="dialogFormVisible">
+  <el-dialog title="新增部门" :visible.sync="dialogFormVisible" top="10vh">
     <el-form :model="form" :rules="rules">
       <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
         <el-input v-model="form.name" autocomplete="off" style="width: 80%;" placeholder="1-50字符" />
@@ -8,9 +8,13 @@
         <el-input v-model="form.code" style="width: 80%;" autocomplete="off" placeholder="1-50字符" />
       </el-form-item>
       <el-form-item label="部门负责人" :label-width="formLabelWidth" prop="manager">
-        <el-select v-model="form.manager" placeholder="请选择" style="width: 80%;">
-          <el-option label="区域一" value="shanghai" />
-          <el-option label="区域二" value="beijing" />
+        <el-select v-model="form.manager" placeholder="请选择" style="width: 80%;" @focus="getEmployeeSimpleFn">
+          <el-option
+            v-for="item in people"
+            :key="item.id"
+            :label="item.username"
+            :value="item.username"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" :label-width="formLabelWidth" prop="introduce">
@@ -27,6 +31,7 @@
 
 <script>
 import { getDepartmentData } from '@/api/department'
+import { getEmployeeSimple } from '@/api/department'
 export default {
   name: '',
   components: {},
@@ -38,7 +43,7 @@ export default {
     },
     treeNode: {
       type: Object,
-      required: true
+      default: null
     }
   },
   data() {
@@ -81,14 +86,21 @@ export default {
           { required: true, message: '请输入部门介绍', trigger: 'blur' },
           { min: 1, max: 300, message: '长度在 1 到 300 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      people: []
     }
   },
   computed: {},
   watch: {},
   created() {
   },
-  methods: {}
+  methods: {
+    async getEmployeeSimpleFn() {
+      const data = await getEmployeeSimple()
+      //   console.log(data)
+      this.people = data
+    }
+  }
 }
 </script>
 

@@ -15,8 +15,14 @@ export function delDepartmentData(id) {
 // 新增部门
 export function addDepartmentData(data) {
   return request({
-    url: ' /company/department',
+    url: '/company/department',
     method: 'post',
     data
+  })
+}
+// 获取简单员工列表
+export function getEmployeeSimple() {
+  return request({
+    url: '/sys/user/simple'
   })
 }
