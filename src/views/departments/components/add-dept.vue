@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="新增部门" :visible.sync="dialogFormVisible" top="10vh">
-    <el-form :model="form" :rules="rules">
+  <el-dialog title="新增部门" :visible.sync="dialogFormVisible" top="10vh" @close="cancelbtn">
+    <el-form ref="addDeptFrom" :model="form" :rules="rules">
       <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
         <el-input v-model="form.name" autocomplete="off" style="width: 80%;" placeholder="1-50字符" />
       </el-form-item>
@@ -22,16 +22,15 @@
       </el-form-item>
 
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+    <div slot="footer" class="dialog-footer" @click="cancelbtn">
+      <el-button>取 消</el-button>
+      <el-button type="primary" @click="submitForm('addDeptFrom')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartmentData } from '@/api/department'
-import { getEmployeeSimple } from '@/api/department'
+import { getEmployeeSimple, getDepartmentData, addDepartmentData } from '@/api/department'
 export default {
   name: '',
   components: {},
@@ -95,10 +94,28 @@ export default {
   created() {
   },
   methods: {
+    // 获取员工简单列表
     async getEmployeeSimpleFn() {
       const data = await getEmployeeSimple()
       //   console.log(data)
       this.people = data
+    },
+    // 提交新增部门表单
+    submitForm(formName) {
+      this.$refs[formName].validate(async(valid) => {
+        if (valid) {
+          await addDepartmentData({ ...this.form, pid: this.treeNode.id })
+          this.$emit('addDept')
+          this.$emit('update:dialogFormVisible', false)
+        } else {
+          console.log('error submit!!')
+        }
+      })
+    },
+    // 关闭并清空表单
+    cancelbtn() {
+      this.$refs.addDeptFrom.resetFields()
+      this.$emit('update:dialogFormVisible', false)
     }
   }
 }

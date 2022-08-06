@@ -9,7 +9,7 @@
           <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" @addDapa="addDapaFn" />
         </el-tree>
         <!-- 弹窗 -->
-        <addDept :dialog-form-visible="showDialog" :tree-node="node" />
+        <addDept :dialog-form-visible.sync="showDialog" :tree-node="node" @addDept="getDepartmentDataFn" />
       </el-card>
     </div>
   </div>
