@@ -26,3 +26,17 @@ export function getEmployeeSimple() {
     url: '/sys/user/simple'
   })
 }
+// 查询部门详情
+export function getDepartmentDetail(id) {
+  return request({
+    url: `/company/department/${id}`
+  })
+}
+// 修改部门详情
+export function updateDepartment(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'put',
+    data
+  })
+}

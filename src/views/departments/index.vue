@@ -6,10 +6,10 @@
         <TreeTool :tree-node="company" :is-root="false" @addDapa="addDapaFn" />
         <!-- 内容 -->
         <el-tree :data="departs" :props="defaultProps">
-          <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" @addDapa="addDapaFn" />
+          <TreeTool slot-scope="{ data }" :tree-node="data" @delTreeNode="getDepartmentDataFn" @addDapa="addDapaFn" @editDept="editDept" />
         </el-tree>
         <!-- 弹窗 -->
-        <addDept :dialog-form-visible.sync="showDialog" :tree-node="node" @addDept="getDepartmentDataFn" />
+        <addDept ref="getDepartDetail" :dialog-form-visible.sync="showDialog" :tree-node="node" @addDept="getDepartmentDataFn" />
       </el-card>
     </div>
   </div>
@@ -55,6 +55,13 @@ export default {
     addDapaFn(node) {
       this.showDialog = true
       this.node = node
+    },
+    // 编辑部门
+    editDept(node) {
+      this.showDialog = true
+      this.node = node
+      // 调用子组件获取部门详情
+      this.$refs.getDepartDetail.getDepartmentDetailFn(this.node.id)
     }
   }
 }

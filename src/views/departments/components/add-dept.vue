@@ -1,5 +1,6 @@
 <template>
-  <el-dialog title="新增部门" :visible.sync="dialogFormVisible" top="10vh" @close="cancelbtn">
+  <!-- 添加部门和编辑部门弹窗 -->
+  <el-dialog :title="showTitle" :visible="dialogFormVisible" top="10vh" @close="cancelbtn">
     <el-form ref="addDeptFrom" :model="form" :rules="rules">
       <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
         <el-input v-model="form.name" autocomplete="off" style="width: 80%;" placeholder="1-50字符" />
@@ -22,15 +23,15 @@
       </el-form-item>
 
     </el-form>
-    <div slot="footer" class="dialog-footer" @click="cancelbtn">
-      <el-button>取 消</el-button>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="cancelbtn">取 消</el-button>
       <el-button type="primary" @click="submitForm('addDeptFrom')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { getEmployeeSimple, getDepartmentData, addDepartmentData } from '@/api/department'
+import { getEmployeeSimple, getDepartmentData, addDepartmentData, getDepartmentDetail, updateDepartment } from '@/api/department'
 export default {
   name: '',
   components: {},
@@ -49,13 +50,24 @@ export default {
     // 检查部门名称是否重复
     const validateRepeatName = async(rule, value, callback) => {
       const { depts } = await getDepartmentData()
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(element => element.name === value)
-      isRepeat ? callback(new Error('存在相同名称部门， 请重新输入')) : callback()
+      let isRepeat = null
+      if (this.form.id) {
+        isRepeat = depts.filter(item => item.pid !== this.form.id && item.id === this.treeNode.id).some(item => item.name === value)
+      } else {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
+      isRepeat ? callback(new Error(`存在同级别下${value}名称部门， 请重新输入`)) : callback()
     }
     // 检查部门编码是否重复
     const validateRepeatCode = async(rule, value, callback) => {
       const { depts } = await getDepartmentData()
-      const isRepeat = depts.some(element => element.code === value)
+      let isRepeat = null
+      if (this.form.id) {
+        isRepeat = depts.some(element => element.code === value && element.id !== this.form.id)
+      } else {
+        isRepeat = depts.some(element => element.code === value)
+      }
+
       isRepeat ? callback(new Error(`存在相同部门编码${value}， 请重新输入`)) : callback()
     }
     return {
@@ -67,6 +79,7 @@ export default {
         introduce: '' // 部门介绍
       },
       formLabelWidth: '120px', // 表单长度
+      //   表单验证规则
       rules: {
         name: [
           { required: true, message: '请输入部门名称', trigger: 'blur' },
@@ -89,7 +102,11 @@ export default {
       people: []
     }
   },
-  computed: {},
+  computed: {
+    showTitle() {
+      return this.form.id ? '编辑部门' : '新增部门'
+    }
+  },
   watch: {},
   created() {
   },
@@ -104,11 +121,19 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          await addDepartmentData({ ...this.form, pid: this.treeNode.id })
+        //   console.log({ ...this.form, pid: this.treeNode.id })
+          if (this.form.id) {
+            await updateDepartment(this.form) // 编辑调用
+          } else {
+            // 新增调用
+            await addDepartmentData({ ...this.form, pid: this.treeNode.id })
+          }
+          //   console.log('2submit!!')
           this.$emit('addDept')
           this.$emit('update:dialogFormVisible', false)
+        //   console.log('2submit!!')
         } else {
-          console.log('error submit!!')
+          console.log('3error submit!!')
         }
       })
     },
@@ -116,6 +141,16 @@ export default {
     cancelbtn() {
       this.$refs.addDeptFrom.resetFields()
       this.$emit('update:dialogFormVisible', false)
+      this.form = {
+        name: '', // 部门名称
+        code: '', // 部门编码
+        manager: '', // 部门管理者
+        introduce: '' // 部门介绍
+      }
+    },
+    // 获取部门详情
+    async getDepartmentDetailFn(id) {
+      this.form = await getDepartmentDetail(id)
     }
   }
 }
