@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card class="tree-card">
+      <el-card v-loading="loading" class="tree-card">
         <!-- 头部 -->
         <TreeTool :tree-node="company" :is-root="false" @addDapa="addDapaFn" />
         <!-- 内容 -->
@@ -38,7 +38,8 @@ export default {
         id: ''
       },
       showDialog: false, // 是否显示弹窗
-      node: null // 获取当前的node节点
+      node: null, // 获取当前的node节点
+      loading: false
     }
   },
   created() {
@@ -46,10 +47,12 @@ export default {
   },
   methods: {
     async getDepartmentDataFn() {
+      this.loading = true
       const { depts } = await getDepartmentData()
       // 获取树形部门数据
       this.departs = tranListToTreeData(depts, '')
       // console.log('depts', this.departs)
+      this.loading = false
     },
     // 添加部门
     addDapaFn(node) {
@@ -72,4 +75,8 @@ export default {
    padding: 30px  140px;
   font-size:14px;
 }
+  /* body {
+    margin: 100px;
+
+  } */
 </style>
