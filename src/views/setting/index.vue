@@ -6,7 +6,7 @@
       <el-card>
         <el-tabs v-model="activeName">
           <el-tab-pane label="新增角色" name="first">
-            <el-button type="primary" size="small" style="margin-bottom: 30px">默认按钮</el-button>
+            <el-button type="primary" size="small" style="margin-bottom: 30px">新增角色</el-button>
 
             <el-table
               :data="tableData"
@@ -14,7 +14,7 @@
               style="width: 100%"
             >
               <el-table-column
-                prop="date"
+                type="index"
                 label="序号"
                 width="100"
                 align="center"
@@ -26,7 +26,7 @@
                 align="center"
               />
               <el-table-column
-                prop="address"
+                prop="description"
                 label="描述"
                 align="center"
               />
@@ -56,8 +56,9 @@
             <!-- 分页符 -->
             <el-pagination
               layout="prev, pager, next"
-              :total="1"
+              :total="page.total"
               style="float:right; margin-top: 10px"
+              @current-change="currentChange"
             />
           </el-tab-pane>
 
@@ -90,16 +91,22 @@
 </template>
 
 <script>
+import { getRoleList } from '@/api/setting'
 export default {
   data() {
     return {
       activeName: 'first',
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }]
+      tableData: [], // 角色信息列表
+      page: {
+        page: 1,
+        pagesize: 10,
+        total: 0
+      } // 页数
+
     }
+  },
+  created() {
+    this.getRoleList()
   },
   methods: {
     handleEdit(index, row) {
@@ -107,6 +114,19 @@ export default {
     },
     handleDelete(index, row) {
       console.log(index, row)
+    },
+    // 获取角色列表
+    async getRoleList() {
+      const { total, rows } = await getRoleList(this.page)
+      this.tableData = rows
+      this.page.total = total
+      console.log(this.tableData)
+    },
+    // 获取当前页的角色列表
+    currentChange(newPage) {
+      this.page.page = newPage
+      this.getRoleList()
+      console.log(this.page)
     }
   }
 }
