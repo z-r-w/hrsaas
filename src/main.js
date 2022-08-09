@@ -17,6 +17,8 @@ import '@/permission' // permission control
 
 import * as directives from '@/directives' // 自定义指令
 
+import Component from '@/components/index' // 注册全局组件
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,6 +32,8 @@ import * as directives from '@/directives' // 自定义指令
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+Vue.use(Component)
 
 Vue.config.productionTip = false
 
