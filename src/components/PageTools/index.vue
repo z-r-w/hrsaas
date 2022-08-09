@@ -11,7 +11,7 @@
       </el-col>
       <!-- 后插槽 -->
       <el-col>
-        <el-row align="middle" justify="end">
+        <el-row align="middle" justify="end" type="flex">
           <slot name="after" />
         </el-row>
       </el-col>
