@@ -30,12 +30,14 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" sortable="" fixed="right" width="280">
-          <el-button type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">转正</el-button>
-          <el-button type="text" size="small">调岗</el-button>
-          <el-button type="text" size="small">离职</el-button>
-          <el-button type="text" size="small">角色</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <template v-slot="{row}">
+            <el-button type="text" size="small">查看</el-button>
+            <el-button type="text" size="small">转正</el-button>
+            <el-button type="text" size="small">调岗</el-button>
+            <el-button type="text" size="small">离职</el-button>
+            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-row type="flex" align="middle" justify="end" style="height: 50px">
@@ -51,7 +53,7 @@
 </template>
 
 <script>
-import { getExployeesList } from '@/api/exployess'
+import { getExployeesList, delEmployee } from '@/api/exployess'
 import EmployeesEnum from '@/api/constant/employees'
 export default {
   data() {
@@ -88,6 +90,17 @@ export default {
     formOfEmploymentFn(row, column, cellValue, index) {
       const obj = EmployeesEnum.hireType.find(item => item.id === cellValue)
       return obj ? obj.value : '未知'
+    },
+    // 删除员工
+    async deleteEmployee(id) {
+      try {
+        await this.$confirm('您确定删除该员工吗')
+        await delEmployee(id)
+        this.getExployeesList(this.page)
+        this.$message.success('删除员工成功')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
