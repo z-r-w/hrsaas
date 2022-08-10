@@ -19,6 +19,8 @@ import * as directives from '@/directives' // 自定义指令
 
 import Component from '@/components/index' // 注册全局组件
 
+import * as filters from '@/filters/index' // 过滤器
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -41,6 +43,11 @@ console.log(Object.keys(directives))
 Object.keys(directives).forEach(element => {
   console.log(element)
   Vue.directive(element, directives[element])
+})
+
+Object.keys(filters).forEach(element => {
+  // console.log(element)
+  Vue.filter(element, filters[element])
 })
 
 new Vue({
