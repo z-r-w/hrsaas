@@ -51,6 +51,8 @@
     </div>
     <!-- 弹层 -->
     <add-employee :show-dialog.sync="showDiolog" />
+    <!-- 导入excel表格 -->
+    <upload-excel />
   </div>
 </template>
 
@@ -58,9 +60,11 @@
 import { getExployeesList, delEmployee } from '@/api/exployess'
 import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
+import UploadExcel from './components/UploadExcel.vue'
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    UploadExcel
   },
   data() {
     return {
