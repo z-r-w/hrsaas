@@ -7,7 +7,7 @@
         <template v-slot:after>
           <el-button type="success">exxel导入</el-button>
           <el-button type="danger">exxel导出</el-button>
-          <el-button type="primary">新增员工</el-button>
+          <el-button type="primary" @click="showDiolog=true">新增员工</el-button>
         </template>
       </page-tools>
       <el-table
@@ -49,13 +49,19 @@
         />
       </el-row>
     </div>
+    <!-- 弹层 -->
+    <add-employee :show-dialog.sync="showDiolog" />
   </div>
 </template>
 
 <script>
 import { getExployeesList, delEmployee } from '@/api/exployess'
+import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
 export default {
+  components: {
+    AddEmployee
+  },
   data() {
     return {
       loading: false,
@@ -64,7 +70,12 @@ export default {
         size: 10,
         total: 0
       },
-      tableData: []
+      tableData: [],
+      showDiolog: false, // 是否展示弹层
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     }
   },
   created() {
