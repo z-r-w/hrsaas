@@ -5,16 +5,16 @@
     style=" width: 600px;
     height: 160px;
     border: 2px dashed #bbb;
-    margin: 0 auto;
+    margin: 100px auto;
     "
   >
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
-    <el-col style="text-align: center;  height: 160px;  border-right: 2px dashed #bbb; line-height: 160px;"><el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
+    <el-col style="text-align: center;  height: 160px;  border-right: 2px dashed #bbb; line-height: 160px; "><el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
       上传
     </el-button></el-col>
     <el-col style=" text-align: center; position: relative;" class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
       <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-        <i class="el-icon-upload" style="display: block; position: absolute; top: 0px;left: 110px; font-size: 60px;" />
+        <i class="el-icon-upload" style="display: block; position: absolute; top: 0px;left: 120px; font-size: 60px;color: #999;" />
         <span>将文件拖到此处</span>
 
       </div>
@@ -51,12 +51,12 @@ export default {
       if (this.loading) return
       const files = e.dataTransfer.files
       if (files.length !== 1) {
-        this.$message.error('Only support uploading one file!')
+        this.$message.error('只支持上传一个文件!')
         return
       }
       const rawFile = files[0] // only use files[0]
       if (!this.isExcel(rawFile)) {
-        this.$message.error('Only supports upload .xlsx, .xls, .csv suffix files')
+        this.$message.error('只支持上传后缀名为.xlsx .xls .csv的文件 ')
         return false
       }
       this.upload(rawFile)
@@ -72,6 +72,7 @@ export default {
       this.$refs['excel-upload-input'].click()
     },
     handleClick(e) {
+      // debugger
       const files = e.target.files
       const rawFile = files[0] // only use files[0]
       if (!rawFile) return
@@ -99,6 +100,7 @@ export default {
           const worksheet = workbook.Sheets[firstSheetName]
           const header = this.getHeaderRow(worksheet)
           const results = XLSX.utils.sheet_to_json(worksheet)
+          // debugger
           this.generateData({ header, results })
           this.loading = false
           resolve()
@@ -129,7 +131,7 @@ export default {
 </script>
 
 <style scoped>
-*{border: 0.06px solid black;}
+/* *{border: 0.06px solid black;} */
 .excel-upload-input{
   display: none;
   z-index: -9999;
@@ -138,5 +140,6 @@ export default {
       width: 300px;
       height: 160px;
       line-height: 160px;
+       color: #999;
 }
 </style>

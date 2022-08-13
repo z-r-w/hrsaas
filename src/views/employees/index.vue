@@ -5,8 +5,8 @@
       <page-tools :is-show="true">
         <span slot="before">共{{ page.total }}条数据</span>
         <template v-slot:after>
-          <el-button type="success">exxel导入</el-button>
-          <el-button type="danger">exxel导出</el-button>
+          <el-button type="success" @click="$router.push('/import?type=user')">exxel导入</el-button>
+          <el-button type="danger" @click="exportData">exxel导出</el-button>
           <el-button type="primary" @click="showDiolog=true">新增员工</el-button>
         </template>
       </page-tools>
@@ -52,7 +52,7 @@
     <!-- 弹层 -->
     <add-employee :show-dialog.sync="showDiolog" />
     <!-- 导入excel表格 -->
-    <upload-excel />
+    <!-- <upload-excel /> -->
   </div>
 </template>
 
@@ -60,11 +60,12 @@
 import { getExployeesList, delEmployee } from '@/api/exployess'
 import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
-import UploadExcel from './components/UploadExcel.vue'
+import { formatDate } from '@/filters'
+// import UploadExcel from './components/UploadExcel.vue'
 export default {
   components: {
-    AddEmployee,
-    UploadExcel
+    AddEmployee
+    // UploadExcel
   },
   data() {
     return {
@@ -116,7 +117,50 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // 导出
+    async exportData() {
+      const headers = {
+        '姓名': 'username',
+        '手机': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+      const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+      const merges = ['A1:A2', 'B1:F1', 'G1:G2']
+      const { rows } = await getExployeesList({ page: 1, size: this.page.total })
+      console.log(rows)
+      const data = this.formatJson(headers, rows)
+      console.log(this.formatJson(headers, rows))
+      import('@/vendor/Export2Excel').then(excel => {
+        excel.export_json_to_excel({
+          header: Object.keys(headers), // 表头 必填
+          data, // 具体数据 必填
+          filename: '人力资源表', // 非必填 表格名称
+          multiHeader,
+          merges
+
+        })
+      })
+    },
+    formatJson(headers, rows) {
+      return rows.map(item => {
+        return Object.keys(headers).map(key => {
+          // debugger
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            const obj = EmployeesEnum.hireType.find(o => o.id === item[headers[key]])
+            return obj ? obj.value : '未知'
+          }
+          return item[headers[key]]
+        })
+      })
     }
+
   }
 }
 </script>
