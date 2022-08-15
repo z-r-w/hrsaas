@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <image-upload ref="staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -86,10 +86,12 @@
           </el-select>
         </el-form-item>
         <!-- 个人头像 -->
+
         <!-- 员工照片 -->
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <image-upload ref="myStaffPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -365,18 +367,39 @@ export default {
   methods: {
     async getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId) // 获取员工数据
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        console.log('this.formData.staffPhoto', this.formData.staffPhoto)
+        this.$refs.staffPhoto.fileList = [{ url: this.formData.staffPhoto }]
+      }
     },
     async savePersonal() {
-      await updatePersonal({ ...this.formData, id: this.userId })
+      const fileList = this.$refs.myStaffPhoto.fileList
+      if (fileList.some(item => item.status !== 'success')) {
+        //  如果此时去找 upload为false的图片 找到了说明 有图片还没有上传完成
+        this.$message.warning('您当前还有图片没有上传完成！')
+        return
+      }
+      await updatePersonal({ ...this.formData, id: this.userId, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存成功')
     },
     async saveUser() {
     //  调用父组件
-      await saveUserDetailById(this.userInfo)
+      const fileList = this.$refs.staffPhoto.fileList // 读取上传组件的数据
+      if (fileList.some(item => item.status !== 'success')) {
+        //  如果此时去找 upload为false的图片 找到了说明 有图片还没有上传完成
+        this.$message.warning('您当前还有图片没有上传完成！')
+        return
+      }
+      // 通过合并 得到一个新对象
+      console.log('{ ...this.userInfo, staffPhoto: fileList.map(item => item.url).join(', ')}', { ...this.userInfo, staffPhoto: fileList.map(item => item.url).join(',') })
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList.length ? fileList[0].url : ' ' })
       this.$message.success('保存成功')
     },
     async getUserDetailInfo() {
       this.userInfo = await getUserDetailInfo(this.userId)
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        this.$refs.myStaffPhoto.fileList = [{ url: this.userInfo.staffPhoto }]
+      }
     }
   }
 }
