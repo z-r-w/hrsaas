@@ -39,13 +39,14 @@ Vue.use(Component)
 
 Vue.config.productionTip = false
 
-console.log(Object.keys(directives))
+// console.log(Object.keys(directives))
 Object.keys(directives).forEach(element => {
+  console.log(element)
+  console.log(directives)
   Vue.directive(element, directives[element])
 })
 
 Object.keys(filters).forEach(element => {
-  // console.log(element)
   Vue.filter(element, filters[element])
 })
 

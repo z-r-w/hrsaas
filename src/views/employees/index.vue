@@ -17,6 +17,16 @@
         border
       >
         <el-table-column label="序号" sortable="" type="index" />
+        <el-table-column label="头像" align="center">
+          <template slot-scope="{row}">
+            <img
+              v-imageError="require('@/assets/common/bigUserHeader.png')"
+              :src="row.staffPhoto"
+              style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+              @click="showDialog(row.staffPhoto)"
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="姓名" sortable="" prop="username" />
         <el-table-column label="工号" sortable="" prop="workNumber" />
         <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formOfEmploymentFn" />
@@ -53,6 +63,13 @@
     <add-employee :show-dialog.sync="showDiolog" />
     <!-- 导入excel表格 -->
     <!-- <upload-excel /> -->
+
+    <!-- 二维码弹层 -->
+    <el-dialog title="二维码" :visible.sync="showCodeDialog">
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -61,6 +78,7 @@ import { getExployeesList, delEmployee } from '@/api/exployess'
 import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 // import UploadExcel from './components/UploadExcel.vue'
 export default {
   components: {
@@ -80,7 +98,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      },
+      showCodeDialog: false // 二维码弹层
     }
   },
   created() {
@@ -118,7 +137,7 @@ export default {
         console.log(error)
       }
     },
-    // 导出
+    // 导出excel
     async exportData() {
       const headers = {
         '姓名': 'username',
@@ -159,8 +178,19 @@ export default {
           return item[headers[key]]
         })
       })
+    },
+    // 生成头像二维码
+    showDialog(url) {
+      if (url) {
+        this.showCodeDialog = true
+        this.$nextTick(() => {
+          // 更新好dom后,执行弹窗二维码显示
+          QrCode.toCanvas(this.$refs.myCanvas, url)
+        })
+      } else {
+        this.$message.warning('该用户还未上传头像')
+      }
     }
-
   }
 }
 </script>
