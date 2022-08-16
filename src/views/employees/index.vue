@@ -45,7 +45,7 @@
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="showRoleDialogFn(row.id)">角色</el-button>
             <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -70,6 +70,8 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <!-- 角色权限 -->
+    <assign-role ref="getUserDetailInfo" :show-role-dialog.sync="showRoleDialog" :user-id="userId" />
   </div>
 </template>
 
@@ -79,10 +81,12 @@ import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
+import AssignRole from './components/assign-role.vue'
 // import UploadExcel from './components/UploadExcel.vue'
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
     // UploadExcel
   },
   data() {
@@ -99,7 +103,9 @@ export default {
         children: 'children',
         label: 'label'
       },
-      showCodeDialog: false // 二维码弹层
+      showCodeDialog: false, // 二维码弹层
+      showRoleDialog: false,
+      userId: null
     }
   },
   created() {
@@ -190,6 +196,12 @@ export default {
       } else {
         this.$message.warning('该用户还未上传头像')
       }
+    },
+    // 生成角色弹窗
+    async showRoleDialogFn(id) {
+      this.userId = id
+      await this.$refs.getUserDetailInfo.getUserDetailInfo(id)
+      this.showRoleDialog = true
     }
   }
 }
