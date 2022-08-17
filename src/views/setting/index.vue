@@ -38,7 +38,7 @@
                   <el-button
                     size="mini"
                     type="success"
-                    @click="handle(scope.$index, scope.row)"
+                    @click="assignPerm(scope.row.id)"
                   >分配权限</el-button>
                   <el-button
                     size="mini"
@@ -102,11 +102,38 @@
         <el-button type="primary" @click="confirmBtn">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 角色分配权限弹窗 -->
+    <el-dialog title="分配权限" :visible="showPermDialog" @close="btnPermCancel">
+      <!-- 权限是一颗树 -->
+      <!-- 将数据绑定到组件上 -->
+      <!-- check-strictly 如果为true 那表示父子勾选时  不互相关联 如果为false就互相关联 -->
+      <!-- id作为唯一标识 -->
+      <el-tree
+        ref="permTree"
+        :data="permData"
+        :props="defaultProps"
+        :show-checkbox="true"
+        default-expand-all
+        :check-strictly="true"
+        :default-expand-all="true"
+        :default-checked-keys="selectCheck"
+        node-key="id"
+      />
+      <!-- 确定 取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small" @click="btnPermOK">确定</el-button>
+          <el-button size="small" @click="btnPermCancel">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList, getComponyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
+import { getRoleList, getComponyInfo, deleteRole, getRoleDetail, updateRole, addRole, assignPerm } from '@/api/setting'
+import { tranListToTreeData } from '@/utils'
+import { getPermissionList } from '@/api/permission'
 export default {
   data() {
     return {
@@ -127,7 +154,15 @@ export default {
       forms: {
         name: 'xiaopan',
         region: 'xiaopan'
-      }
+      },
+      showPermDialog: false, // 权限弹窗
+      permData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      roleId: null,
+      selectCheck: []
     }
   },
   created() {
@@ -202,6 +237,27 @@ export default {
     async getComponyInfo() {
       this.form = await getComponyInfo(this.$store.getters.companyId)
       // console.log(this.form)
+    },
+    // 点击分配权限
+    async assignPerm(id) {
+      this.permData = tranListToTreeData(await getPermissionList(), '0') // 转化list到树形数据
+      const { permIds } = await getRoleDetail(id) // permIds是当前角色所拥有的权限点数据
+      this.selectCheck = permIds
+      this.roleId = id
+      this.showPermDialog = true
+    },
+    // 权限弹窗确定
+    async  btnPermOK() {
+      // 调用el-tree的方法
+      // console.log(this.$refs.permTree.getCheckedKeys())
+      await assignPerm({ permIds: this.$refs.permTree.getCheckedKeys(), id: this.roleId })
+      this.$message.success('分配权限成功')
+      this.showPermDialog = false
+    },
+    // 权限弹窗取消
+    btnPermCancel() {
+      this.selectCheck = [] // 重置数据
+      this.showPermDialog = false
     }
   }
 }
