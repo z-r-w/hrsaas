@@ -65,7 +65,6 @@ export const constantRoutes = [
     }]
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
   {
     path: '/import',
     component: Layout,
@@ -78,7 +77,8 @@ export const constantRoutes = [
 ]
 
 // 动态路由
-export const asyncRoutes = [approvalsRouter,
+export const asyncRoutes =
+[approvalsRouter,
   departmentsRouter,
   employeesRouter,
   permissionRouter,
@@ -89,7 +89,7 @@ export const asyncRoutes = [approvalsRouter,
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()

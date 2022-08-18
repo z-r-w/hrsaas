@@ -84,7 +84,8 @@ router.beforeEach(async function(to, from, next) {
         const { roles } = await store.dispatch('user/getUserInfo') // 获取用户拥有的角色权限
         console.log('roles', roles)
         const routes = await store.dispatch('permission/filterRoutes', roles.menus) // 用户拥有的权限路由
-        router.addRoutes(routes)
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }]
+        )
         next(to.path)
       }
       next() // 直接放行
