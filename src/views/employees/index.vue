@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getExployeesList, delEmployee } from '@/api/exployess'
+import { getExployeesList, delEmployee } from '@/api/employees'
 import AddEmployee from './components/add-employee.vue'
 import EmployeesEnum from '@/api/constant/employees'
 import { formatDate } from '@/filters'

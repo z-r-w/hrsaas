@@ -47,7 +47,7 @@
 
 <script>
 import { getUserDetailInfo } from '@/api/user'
-import { saveUserDetailById } from '@/api/exployess'
+import { saveUserDetailById } from '@/api/employees'
 import userInfos from './components/user-info.vue'
 import JobInfos from './components/job-infos.vue'
 export default {

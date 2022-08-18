@@ -159,7 +159,7 @@
 </template>
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-import { updateJob, getJobDetail } from '@/api/exployess'
+import { updateJob, getJobDetail } from '@/api/employees'
 import { getEmployeeSimple } from '@/api/department'
 
 export default {

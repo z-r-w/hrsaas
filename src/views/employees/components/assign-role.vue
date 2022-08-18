@@ -16,7 +16,7 @@
 <script>
 import { getRoleList } from '@/api/setting'
 import { getUserDetailInfo } from '@/api/user'
-import { assignRoles } from '@/api/exployess'
+import { assignRoles } from '@/api/employees'
 export default {
   name: '',
   components: {},

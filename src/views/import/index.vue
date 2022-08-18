@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { importEmployee } from '@/api/exployess'
+import { importEmployee } from '@/api/employees'
 export default {
   data() {
     return {

@@ -331,7 +331,7 @@
 </template>
 
 <script>
-import { getPersonalDetail, getJobDetail } from '@/api/exployess'
+import { getPersonalDetail, getJobDetail } from '@/api/employees'
 import { getUserDetailInfo } from '@/api/user'
 export default {
   data() {

@@ -42,7 +42,7 @@
 <script>
 import { tranListToTreeData } from '@/utils/index'
 import { getDepartmentData } from '@/api/department'
-import { addEmployee } from '@/api/exployess'
+import { addEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 export default {
   props: {
