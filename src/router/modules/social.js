@@ -2,7 +2,7 @@ import layout from '@/layout' // 引入一级路由
 
 export default {
   path: '/social',
-  name: 'social',
+  name: 'social_securitys',
   component: layout,
   children: [{
     path: '',

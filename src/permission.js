@@ -81,7 +81,11 @@ router.beforeEach(async function(to, from, next) {
       NProgress.done() // 手动强制关闭一次  为了解决 手动切换地址时  进度条的不关闭的问题
     } else {
       if (!store.getters.userId) {
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo') // 获取用户拥有的角色权限
+        console.log('roles', roles)
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus) // 用户拥有的权限路由
+        router.addRoutes(routes)
+        next(to.path)
       }
       next() // 直接放行
     }

@@ -113,7 +113,6 @@
         :data="permData"
         :props="defaultProps"
         :show-checkbox="true"
-        default-expand-all
         :check-strictly="true"
         :default-expand-all="true"
         :default-checked-keys="selectCheck"
