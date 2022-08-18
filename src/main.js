@@ -23,6 +23,7 @@ import * as filters from '@/filters/index' // 过滤器
 
 import Print from 'vue-print-nb'
 
+import checkPermission from '@/minix/checkPermission'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -38,7 +39,7 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 Vue.use(Print)
 Vue.use(Component)
-
+Vue.mixin(checkPermission)
 Vue.config.productionTip = false
 
 // console.log(Object.keys(directives))
