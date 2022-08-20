@@ -8,6 +8,7 @@
     <!--     <breadcrumb class="breadcrumb-container" />
  -->
     <div class="right-menu">
+      <ThemePicker class="right-menu-item" style="padding-top:5px" />
       <ScreenFull class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -123,6 +124,7 @@ export default {
       font-size: 18px;
       color: #5a5e66;
       vertical-align: middle;
+      line-height: 50px;
 
       &.hover-effect {
         cursor: pointer;
