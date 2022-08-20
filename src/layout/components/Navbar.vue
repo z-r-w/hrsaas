@@ -8,6 +8,7 @@
     <!--     <breadcrumb class="breadcrumb-container" />
  -->
     <div class="right-menu">
+      <Lang class="right-menu-item" />
       <ThemePicker class="right-menu-item" style="padding-top:5px" />
       <ScreenFull class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">

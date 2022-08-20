@@ -6,6 +6,7 @@ export default {
   component: layout,
   children: [{
     path: '',
+    name: 'departments',
     component: () => { return import('@/views/departments') },
     meta: {
       title: '组织架构',
