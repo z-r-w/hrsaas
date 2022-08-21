@@ -87,7 +87,8 @@ export const asyncRoutes =
   settingRouter,
   socialRouter]
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
+  base: '/hr/', // 配置项目基础地址
   scrollBehavior: () => ({ y: 0 }),
   routes: [...constantRoutes]
 })
